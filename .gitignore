@@ -131,3 +131,6 @@ dmypy.json
 # Config files
 *.cnf
 *.ini
+
+# csv files from hkex historical record
+*.csv

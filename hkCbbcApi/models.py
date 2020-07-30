@@ -1,5 +1,5 @@
 from django.db import models
-import constants
+import constants, enums
 
 # Create your models here.
 
@@ -22,7 +22,10 @@ class StockSchema(models.Model):
 
     #fields
     stock_abbv = models.CharField(null=True, max_length=255, blank=False)
-    stock_name = models.CharField(null=True, max_length=255, blank=False)
+    stock_name_en = models.CharField(null=True, max_length=255, blank=False)
+    stock_name_zh = models.CharField(null=True, max_length=255, blank=False)
+    cbbc_abbv = models.CharField(null=True, max_length=255, blank=False)
+    is_index = models.BooleanField(default=False)
 
 
 
@@ -46,12 +49,14 @@ class BullBearRatioSchema(models.Model):
     # fields
     trade_date = models.DateField(null=True, blank=False)
     scrape_datetime = models.DateTimeField(null=True, blank=False)
-    bull_volume = models.IntegerField(null=True, blank=False)
-    bear_volume = models.IntegerField(null=True, blank=False)
+    bull_hedge_volume = models.FloatField(null=True, blank=False)
+    bear_hedge_volume = models.FloatField(null=True, blank=False)
+    bull_chips_amount = models.FloatField(null=True, blank=False)
+    bear_chips_amount = models.FloatField(null=True, blank=False)
+    bull_bear_ratio_for_chips = models.FloatField(null=True, blank=False)
+    bull_bear_ratio_for_hedge_volume = models.FloatField(null=True, blank=False)
+    source = models.IntegerField(null=False, default=enums.CbbcDataSourceEnum.hkex.value, choices=[(tag, tag.value) for tag in enums.CbbcDataSourceEnum])
     close_price = models.FloatField(null=True, blank=False)
-    bull_amount = models.FloatField(null=True, blank=False)
-    bear_amount = models.FloatField(null=True, blank=False)
-    bull_bear_ratio = models.FloatField(null=True, blank=False)
 
     # Foreign key
     stock = models.ForeignKey(StockSchema, on_delete=models.PROTECT, null=True, related_name='bull_bear_ratio')
