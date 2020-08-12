@@ -5,3 +5,4 @@ mysqlclient==2.0.1
 python-decouple==3.3
 pandas==1.1.0
 yahoofinancials==1.5
+django-crontab==0.7.1
