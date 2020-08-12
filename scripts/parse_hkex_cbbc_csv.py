@@ -21,7 +21,7 @@ def get_close_price(trade_date, underlying_asset):
 
     return close_price
 
-def run():
+def main():
     data_csv_filenames = glob.glob('hkex_cbbc_data/*.csv')
     for filename in data_csv_filenames:
         cbbc_data = pd.read_csv(filename, sep='"\t"', encoding="utf-16", 
@@ -100,3 +100,6 @@ def run():
                                         bull_bear_ratio_for_chips=bull_bear_ratio_for_chips, close_price=close_price)
                 BullBearRatioSchema.objects.update_or_create(stock=stock_obj, trade_date=trade_date_obj, defaults=bull_bear_data)
         os.remove(filename)
+
+def run():
+    main()
