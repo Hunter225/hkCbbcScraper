@@ -30,6 +30,9 @@ def main():
         underlying_assets = [underlying_asset for underlying_asset in cbbc_data['Underlying'].unique() if underlying_asset != None]
 
         for trade_date in trade_dates:
+            trade_date_obj = datetime.strptime(trade_date, '%Y-%m-%d')
+            if trade_date_obj < datetime.today() - timedelta(days=7): #only recover the data of previous 7days
+                continue
             for underlying_asset in underlying_assets:
 
                 # Bull part
@@ -62,7 +65,6 @@ def main():
                 bear_chips_amount = bear_datum['chips_amount'].sum()
 
                 # meta data
-                trade_date_obj = datetime.strptime(trade_date, '%Y-%m-%d')
                 scrape_date = datetime.now()
                 stock_abbv = underlying_asset.lstrip("0")
                 try:
