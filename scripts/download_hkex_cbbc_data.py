@@ -3,9 +3,8 @@ import requests
 import constants
 import zipfile
 import os
-from scripts.parse_hkex_cbbc_csv import main as parse_hkex_cbbc_csv
 
-def download_cbbc_data():
+def main():
     this_month = datetime.today().strftime("%m")
     url = constants.CBBC_zip_download_link_template(this_month)
     r = requests.get(url, stream=True)
@@ -19,7 +18,3 @@ def download_cbbc_data():
         zip_ref.extractall(constants.save_dir_of_CBBC_data)
 
     os.remove(zip_file_path)
-
-def execute():
-    download_cbbc_data()
-    parse_hkex_cbbc_csv()

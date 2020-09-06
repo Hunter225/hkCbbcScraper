@@ -33,19 +33,13 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django_extensions',
-    'django_crontab',
     'hkCbbcApi.apps.HkcbbcapiConfig',
-    'cronjobs',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-]
-
-CRONJOBS = [
-    ('0 18 * * 1-5', 'cronjobs.scrap_hkex_cbbc_data.execute')
 ]
 
 MIDDLEWARE = [
