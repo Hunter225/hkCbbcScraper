@@ -55,8 +55,8 @@ class BullBearRatioSchema(models.Model):
     bear_chips_amount = models.FloatField(null=True, blank=False)
     bull_bear_ratio_for_chips = models.FloatField(null=True, blank=False)
     bull_bear_ratio_for_hedge_volume = models.FloatField(null=True, blank=False)
-    bull_weighted_sum = models.FloatField(null=True, blank=False)
-    bear_weighted_sum = models.FloatField(null=True, blank=False)
+    bull_weighted_average = models.FloatField(null=True, blank=False)
+    bear_weighted_average = models.FloatField(null=True, blank=False)
     source = models.IntegerField(null=False, default=enums.CbbcDataSourceEnum.hkex.value, choices=[(tag, tag.value) for tag in enums.CbbcDataSourceEnum])
     close_price = models.FloatField(null=True, blank=False)
 
