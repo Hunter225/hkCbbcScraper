@@ -25,7 +25,7 @@ def main():
     data_csv_filenames = glob.glob('hkex_cbbc_data/*.csv')
     for filename in data_csv_filenames:
         cbbc_data = pd.read_csv(filename, sep='"\t"', encoding="utf-16", 
-                                header=0, usecols=['CBBC Name' ,'Trade Date', 'Underlying', 'Bull/Bear', 'No. of CBBC still out in market *', 'Closing Price', 'Ent. Ratio^'])
+                                header=0, usecols=['CBBC Name' ,'Trade Date', 'Underlying', 'Bull/Bear', 'No. of CBBC still out in market *', 'Call Level', 'Closing Price', 'Ent. Ratio^'])
         trade_dates = [trade_date for trade_date in cbbc_data['Trade Date'].unique() if trade_date != None]
         underlying_assets = [underlying_asset for underlying_asset in cbbc_data['Underlying'].unique() if underlying_asset != None]
 
@@ -49,6 +49,10 @@ def main():
                 bull_hedge_volume = bull_datum['hedging_volume'].sum()
                 bull_chips_amount = bull_datum['chips_amount'].sum()
 
+                if bull_datum['No. of CBBC still out in market *'].sum() == 0:
+                    bull_call_level_weighted_average = -1
+                else:
+                    bull_call_level_weighted_average = (bull_datum['Call Level'] * bull_datum['No. of CBBC still out in market *']).sum() / bull_datum['No. of CBBC still out in market *'].sum()
 
                 # Bear part
                 bear_datum = cbbc_data[(cbbc_data['Bull/Bear'] == 'Bear      ') & \
@@ -63,6 +67,12 @@ def main():
                 
                 bear_hedge_volume = bear_datum['hedging_volume'].sum()
                 bear_chips_amount = bear_datum['chips_amount'].sum()
+
+                if bear_datum['No. of CBBC still out in market *'].sum() == 0:
+                    bear_call_level_weighted_average = -1
+                else:
+                    bear_call_level_weighted_average = (bear_datum['Call Level'] * bear_datum['No. of CBBC still out in market *']).sum() / bear_datum['No. of CBBC still out in market *'].sum()
+
 
                 # meta data
                 scrape_date = datetime.now()
@@ -99,7 +109,8 @@ def main():
                 bull_bear_data = dict(status='A', scrape_datetime=scrape_date, bull_hedge_volume=bull_hedge_volume,
                                         bear_hedge_volume=bear_hedge_volume, bull_bear_ratio_for_hedge_volume=bull_bear_ratio_for_hedge_volume,
                                         bull_chips_amount=bull_chips_amount, bear_chips_amount=bear_chips_amount,
-                                        bull_bear_ratio_for_chips=bull_bear_ratio_for_chips, close_price=close_price)
+                                        bull_bear_ratio_for_chips=bull_bear_ratio_for_chips, close_price=close_price, 
+                                        bull_weighted_average=bull_call_level_weighted_average, bear_weighted_average=bear_call_level_weighted_average,)
                 BullBearRatioSchema.objects.update_or_create(stock=stock_obj, trade_date=trade_date_obj, defaults=bull_bear_data)
         os.remove(filename)
 
