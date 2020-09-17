@@ -7,6 +7,7 @@ class StockSchema(models.Model):
     class Meta:
         ordering = ('created_on',)
         db_table = 'stocks'
+        indexes = [models.Index(fields=['stock_abbv'])]
 
     #standard settings
     status_values = {constants.status_active: 'A', constants.status_deleted: 'D'}
@@ -33,6 +34,7 @@ class BullBearRatioSchema(models.Model):
     class Meta:
         ordering = ('created_on',)
         db_table = 'bull_bear_ratios'
+        indexes = [models.Index(fields=['trade_date'])]
         
     #standard settings
     status_values = {constants.status_active: 'A', constants.status_deleted: 'D'}
